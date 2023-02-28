@@ -8,6 +8,8 @@ project(helloworld VERSION ${PROJECT_VESRION})
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 configure_file(version.h.in version.h)
+configure_file(Info.plist Info.plist COPYONLY)
+configure_file(AppIcon.png AppIcon.png COPYONLY)
 
 # Google Test
 include(FetchContent)
@@ -77,6 +79,9 @@ endif()
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
 
 if(APPLE)
+    set(CPACK_BUNDLE_NAME "dimazava_sr1")
+    set(CPACK_BUNDLE_PLIST "Info.plist")
+    set(CPACK_BUNDLE_ICON "AppIcon.png")
     set(CPACK_GENERATOR Bundle)
 else()
     set(CPACK_GENERATOR DEB)
