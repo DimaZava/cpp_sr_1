@@ -15,7 +15,7 @@ FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG        release-1.11.0
-)
+  )
 FetchContent_MakeAvailable(googletest)
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
@@ -30,53 +30,57 @@ add_executable(test_version_google test_version_google.cpp)
 set_target_properties(helloworld_cli helloworld test_version PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
-)
+    )
 target_include_directories(helloworld
     PRIVATE "${CMAKE_BINARY_DIR}"
-)
+    )
 set_target_properties(test_version PROPERTIES
     COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
     INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
-)
+    )
 
 target_link_libraries(helloworld_cli PRIVATE
     helloworld
-)
+    )
 target_link_libraries(test_version
     ${Boost_LIBRARIES}
     helloworld
-)
+    )
 target_link_libraries(test_version_google
     PRIVATE
-  GTest::GTest
-  helloworld
-)
+    GTest::GTest
+    helloworld
+    )
 
 if (MSVC)
     target_compile_options(helloworld_cli PRIVATE
         /W4
-    )
+        )
     target_compile_options(helloworld PRIVATE
         /W4
-    )
+        )
     target_compile_options(test_version PRIVATE
         /W4
-    )
+        )
 else ()
     target_compile_options(helloworld_cli PRIVATE
         -Wall -Wextra -pedantic -Werror
-    )
+        )
     target_compile_options(helloworld PRIVATE
         -Wall -Wextra -pedantic -Werror
-    )
+        )
     target_compile_options(test_version PRIVATE
         -Wall -Wextra -pedantic -Werror
-    )
+        )
 endif()
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
 
-set(CPACK_GENERATOR DEB)
+if(APPLE)
+    set(CPACK_GENERATOR Bundle)
+else()
+    set(CPACK_GENERATOR DEB)
+endif()
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
