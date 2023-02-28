@@ -2,14 +2,15 @@ cmake_minimum_required(VERSION 3.2)
 
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.0.${PATCH_VERSION})
+# set(APP_ICON_FILE "AppIcon.icns")
 
 project(helloworld VERSION ${PROJECT_VESRION})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 configure_file(version.h.in version.h)
-configure_file(Info.plist Info.plist COPYONLY)
-configure_file(AppIcon.png AppIcon.png COPYONLY)
+configure_file(Info.plist.in Info.plist @ONLY)
+# configure_file(AppIcon.icns AppIcon.icns COPYONLY)
 
 # Google Test
 include(FetchContent)
@@ -79,10 +80,14 @@ endif()
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
 
 if(APPLE)
-    set(CPACK_BUNDLE_NAME "dimazava_sr1")
-    set(CPACK_BUNDLE_PLIST "Info.plist")
-    set(CPACK_BUNDLE_ICON "AppIcon.png")
-    set(CPACK_GENERATOR Bundle)
+    set(CPACK_GENERATOR "7Z")
+    # set(CPACK_BUNDLE_NAME "dimazava_sr1")
+    # message(${PROJECT_BINARY_DIR})
+    # message(${PROJECT_SOURCE_DIR})
+    # set(CPACK_BUNDLE_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
+    # set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/${APP_ICON_FILE})
+    # set(CPACK_DMG_BACKGROUND_IMAGE ${PROJECT_SOURCE_DIR}/${APP_ICON_FILE})
+    # set(CPACK_DMG_VOLUME_NAME dimazava_sr1-${PATCH_VERSION})
 else()
     set(CPACK_GENERATOR DEB)
 endif()
@@ -91,7 +96,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 
-set(CPACK_PACKAGE_CONTACT example@example.com)
+set(CPACK_PACKAGE_CONTACT dimazava@hotmail.com)
 
 include(CPack)
 
