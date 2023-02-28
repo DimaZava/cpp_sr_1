@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/github_actions
 
 jobs:
   build:
@@ -38,3 +37,21 @@ jobs:
           asset_path: ./helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
+
+on:
+  push:
+    tags:
+      - "macos_*"
+
+jobs:
+  runs-on: macos-latest
+  steps:
+    - uses: actions/checkout@v2
+    with:
+      submodules: true
+    - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    - run: brew install cmake
+    - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+    - run: cmake --build .
+    - run: cmake --build . --target test
+    - run: cmake --build . --target package
