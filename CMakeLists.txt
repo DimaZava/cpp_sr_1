@@ -2,10 +2,17 @@ cmake_minimum_required(VERSION 3.2)
 
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.0.${PATCH_VERSION})
+# GoogleTest requires at least C++14
+set(CMAKE_CXX_STANDARD 14)
 
 project(helloworld VERSION ${PROJECT_VESRION})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
 
 configure_file(version.h.in version.h)
 
@@ -32,6 +39,18 @@ target_link_libraries(test_version
     ${Boost_LIBRARIES}
     helloworld
 )
+
+add_executable(
+  test_version_google
+  test_version_google.cpp
+)
+target_link_libraries(
+  test_version_google
+  helloworld
+)
+
+include(GoogleTest)
+gtest_discover_tests(test_version_google)
 
 if (MSVC)
     target_compile_options(helloworld_cli PRIVATE
