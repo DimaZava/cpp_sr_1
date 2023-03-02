@@ -30,9 +30,3 @@
 *.exe
 *.out
 *.app
-CMakeFiles
-CMakeScripts
-Debug
-Testing
-build
-helloworld.xcodeproj
